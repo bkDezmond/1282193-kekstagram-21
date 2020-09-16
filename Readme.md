@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
-* Студент: [Петр Слободин](https://up.htmlacademy.ru/javascript/21/user/1282193).
-* Наставник: `Неизвестно`.
+- Студент: [Петр Слободин](https://up.htmlacademy.ru/javascript/21/user/1282193).
+- Наставник: [Александр Пинаев](https://htmlacademy.ru/profile/id1075973).
 
 ---
 
