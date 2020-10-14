@@ -19,9 +19,13 @@ let comments = {
   name: names
 };
 
+comments();
+
 let getRandomLikes = function () {
   return Math.floor(Math.random() * (MAX_LIKES - MIN_LIKES)) + MIN_LIKES;
 };
+
+getRandomLikes();
 
 // и вот дальше я не могу понять как создать массив с объектами
 let generatePhotosArray = function () {
@@ -29,6 +33,9 @@ let generatePhotosArray = function () {
   for (let i = 0; i <= 25; i++) {
     return posts;
   }
+  return generatePhotosArray;
 };
+
+generatePhotosArray();
 
 // let template = document.querySelector(`#picture`);
