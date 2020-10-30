@@ -1,28 +1,31 @@
 "use strict";
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
+const MIN_COMMENTS = 1;
+const MAX_COMMENTS = 5;
 
-let names = [`Игорь`, `Андрей`, `Илья`, `Анна`, `Ирина`, `Ольга`];
-let getRandomName = function () {
-  let randomIndex = Math.floor(Math.random() * names.length);
-  return names[randomIndex];
+let NAMES = [`Игорь`, `Андрей`, `Илья`, `Анна`, `Ирина`, `Ольга`];
+let getRandomName = () => {
+  let randomIndex = Math.floor(Math.random() * NAMES.length);
+  return NAMES[randomIndex];
 };
 
-let messages = [`Всё отлично!`, `В целом всё неплохо. Но не всё.`, `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`, `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`, `Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.`, `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`];
-let getRandomMessage = function () {
-  let randomIndex = Math.floor(Math.random() * messages.length);
-  return messages[randomIndex];
+let MESSAGES = [`Всё отлично!`, `В целом всё неплохо. Но не всё.`, `Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.`, `Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.`, `Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.`, `Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!`];
+let getRandomMessage = () => {
+  let randomIndex = Math.floor(Math.random() * MESSAGES.length);
+  return MESSAGES[randomIndex];
 };
 
-let avatarNumbers = [1, 2, 3, 4, 5, 6];
+let AVATAR_NUMBERS = [1, 2, 3, 4, 5, 6];
 
-let getRandomAvatar = function () {
-  let randomIndex = Math.floor(Math.random() * avatarNumbers.length);
-  let avatarSrc = `img/avatar-` + avatarNumbers[randomIndex] + `.svg`;
+let getRandomAvatar = () => {
+  let randomIndex = Math.floor(Math.random() * AVATAR_NUMBERS.length);
+  let avatarSrc = `img/avatar-` + AVATAR_NUMBERS[randomIndex] + `.svg`;
   return avatarSrc;
 };
 
-let getSomeComment = function () {
+
+let getSomeComment = () => {
   return {
     avatar: getRandomAvatar(),
     message: getRandomMessage(),
@@ -30,36 +33,36 @@ let getSomeComment = function () {
   };
 };
 
-const comments = [
-  getSomeComment(),
-  getSomeComment(),
-];
+let getRandomNumber = () => {
+  return Math.floor(Math.random() * (MAX_COMMENTS - MIN_COMMENTS)) + MIN_COMMENTS;
+};
 
-let getRandomComments = function () {
+let getRandomComments = () => {
   const randomComments = [];
-  for (let i = 0; i < comments.length; i++) {
-    randomComments.push(comments[i]);
+  const randomCount = getRandomNumber();
+  for (let i = 0; i < randomCount; i++) {
+    const comment = getSomeComment();
+    randomComments.push(comment);
   }
   return randomComments;
 };
-let randomComments = getRandomComments();
 
-let getRandomLikes = function () {
+let getRandomLikes = () => {
   return Math.floor(Math.random() * (MAX_LIKES - MIN_LIKES)) + MIN_LIKES;
 };
 
-let getSomePhoto = function (url) {
+let getSomePhoto = (url) => {
   return {
     url,
     description: `description`,
     likes: getRandomLikes(),
-    comments: randomComments,
+    comments: getRandomComments(),
   };
 };
 
-let generateRandomPhotos = function () {
+let generateRandomPhotos = () => {
   const photos = [];
-  for (let i = 0; i < 25; i++) {
+  for (let i = 1; i < 26; i++) {
     photos.push(getSomePhoto(`photos/${i}.jpg`));
   }
   return photos;
@@ -67,21 +70,19 @@ let generateRandomPhotos = function () {
 
 let photos = generateRandomPhotos();
 
-
-// console.log(photos);
-
-let pictureList = document.querySelector(`.picture`);
+let pictureElements = document.querySelector(`.pictures`);
 let similarPictureTemplate = document.querySelector(`#picture`).content;
-let pictureComments = similarPictureTemplate.querySelector(`.picture__comments`);
-let pictureLikes = similarPictureTemplate.querySelector(`.picture__likes`);
-let pictureImages = similarPictureTemplate.querySelector(`.picture__img`);
 
 // функция создания DOM
 
-let renderTemplateContent = function () {
+let renderTemplateContent = (photo) => {
   let pictureTemplate = similarPictureTemplate.cloneNode(true);
-  pictureComments.textContent = Number(getSomePhoto.randomComments);
-  pictureLikes.textContent = Number(getSomePhoto.likes);
+  let pictureComments = pictureTemplate.querySelector(`.picture__comments`);
+  let pictureLikes = pictureTemplate.querySelector(`.picture__likes`);
+  let pictureImages = pictureTemplate.querySelector(`.picture__img`);
+  pictureComments.textContent = photo.comments.length;
+  pictureLikes.textContent = photo.likes;
+  pictureImages.src = photo.url;
   return pictureTemplate;
 };
 
@@ -89,6 +90,7 @@ let renderTemplateContent = function () {
 
 let fragment = document.createDocumentFragment();
 for (let i = 0; i < photos.length; i++) {
-  fragment.appendChild(renderTemplateContent(getSomePhoto[i]));
+  fragment.appendChild(renderTemplateContent(photos[i]));
 }
-pictureList.appendChild(fragment);
+pictureElements.appendChild(fragment);
+
